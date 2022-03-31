@@ -10,18 +10,15 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\LoginController;
 
-Route::post('/login/e-office', [LoginController::class, 'eOfficeLogin'])->name('e-office.login');
+
+Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('process_login');
+
 
 Route::middleware('guest')->group(function () {
 
-    Route::get('/', function(){
-        return redirect('/login');
-    });
+    Route::get('/', [LoginController::class, 'showLoginForm']);
 
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('process_login');
-
 
 });
 
@@ -75,6 +72,9 @@ Route::middleware('auth')->group(function () {
 
 
 });
+
+Route::post('/login/e-office', [LoginController::class, 'eOfficeLogin'])->name('e-office.login');
+
 
 
 
