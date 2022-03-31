@@ -26,9 +26,15 @@ class HomeRepository
         $this->totalNilaiPerResponden();
 
         return $this->totalNilaiPerResponden->groupBy('question_id')->values()->map(function($jawaban){
-            return $jawaban->map(function($test){
+
+            $avg = $jawaban->map(function($test){
                 return $test->nilai;
             })->avg();
+
+            return [
+                $jawaban->first()->question,
+                $avg
+            ];
         });
     }
 
@@ -39,7 +45,7 @@ class HomeRepository
 
     public function nilaiRata()
     {
-        return $this->totalNilaiPerPertanyaan()->avg() * 25; 
+        return $this->totalNilaiPerPertanyaan()->avg([1]) * 25; 
     }
 
     public function nilaiKonversi()

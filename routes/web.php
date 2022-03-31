@@ -48,31 +48,36 @@ Route::middleware('auth')->group(function () {
         Route::get('ipnbk/statistik/{id?}', [StatistikController::class, 'index'])
         ->name('admin.statistik.index');
 
-        Route::get('ipnbk/grafik/{id?}', [GrafikController::class, 'index'])
-        ->name('admin.grafik.index');
+         Route::get('survey/history/{year?}', [SurveyController::class, 'history'])
+        ->name('admin.survey.history');
 
-        Route::get('ipnbk/statistik/cetak/{id}', [StatistikController::class, 'cetakRekap'])
-        ->name('admin.statistik.cetak');
+        Route::post('survey/history', [SurveyController::class, 'dataHistory'])
+        ->name('admin.data.history');
 
-            Route::middleware('admin')->group(function () {
+        Route::get('survey/history/edit/{id?}/{question_id?}', [SurveyController::class, 'editHistory'])
+        ->name('admin.edit.history');
 
-                Route::resource('jadwal',  JadwalController::class, [
-                    'names' => 'admin.setting'     
-                ])->except(['show']);
+        Route::post('survey/history/update', [SurveyController::class, 'upaateHistory'])
+        ->name('admin.update.history');
 
-                Route::post('show/{jadwal}', [JadwalController::class, 'show'])->name('admin.setting.show');
+        Route::middleware('admin')->group(function () {
 
-                Route::resource('question', QuestionsController::class, [
-                        'names' => 'admin.question'     
-                ]);
+            Route::resource('jadwal',  JadwalController::class, [
+                'names' => 'admin.setting'     
+            ])->except(['show']);
 
-                Route::resource('answer', AnswerController::class, [
-                        'names' => 'admin.answer'     
-                ])->except(['show']);
+            Route::post('show/{jadwal}', [JadwalController::class, 'show'])->name('admin.setting.show');
+
+            Route::resource('question', QuestionsController::class, [
+                    'names' => 'admin.question'     
+            ]);
+
+            Route::resource('answer', AnswerController::class, [
+                    'names' => 'admin.answer'     
+            ])->except(['show']);
         });
 
     });
-
 
 });
 

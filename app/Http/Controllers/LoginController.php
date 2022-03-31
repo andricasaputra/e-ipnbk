@@ -23,19 +23,25 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required'],
+            'username' => ['required', 'string'],
             'password' => ['required']
         ]);
- 
+        
+        if (str_contains($credentials['username'], '@pertanian.go.id')) {
+            $credentials['username'] = str_replace('@pertanian.go.id', '', $credentials['username']);
+        }
+
+        if (str_contains($credentials['username'], '-')) {
+            $credentials['username'] = str_replace('-', '_', $credentials['username']);
+        }
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
             return redirect()->intended('admin/home');
         }
  
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ])->onlyInput(['username']);
+        return redirect()->back()->withErrors(['msg' => 'Username atau password yang anda masukkan  sallah.']);
     }
 
     public function eOfficeLogin(Request $request)

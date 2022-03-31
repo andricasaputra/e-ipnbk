@@ -91,4 +91,51 @@ class SurveyController extends Controller
             'assets/images/drink.png'
         ];
     }
+
+    public function history($year = null)
+    {
+        $year = $year ?? date('Y');
+
+        $surveys = Result::where('responden_id', auth()->id())->whereYear('created_at', $year)->get();
+
+        return view('admin.survey.index')->withSurveys($surveys);
+    }
+
+    public function dataHistory(Request $request)
+    {
+        $year = $request->year ?? date('Y');
+
+        return Result::where('responden_id', auth()->id())->with(['answer', 'question'])->whereYear('created_at', $year)->get();
+    }
+
+    public function editHistory($id, $question_id)
+    {
+    
+        $survey = Result::where('responden_id', auth()->id())->with(['answer', 'question'])->whereId($id)->where('question_id', $question_id)->first();
+
+        return view('admin.survey.edit')->withSurvey($survey);
+    }
+
+    public function upaateHistory(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            
+            $result = Result::find($request->id);
+
+            $result->answer_id = $request->answer_id;
+             
+            $result->save();
+
+            DB::commit();
+
+            return redirect(route('admin.survey.history'));
+
+        } catch(Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+    }
 }
