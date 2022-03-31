@@ -18,7 +18,7 @@
 
 <div class="card">
 <div class="card-body">
-    <h4 class="card-title">Jadwal Srvey IPNBK</h4>
+    <h4 class="card-title">Jadwal Survey IPNBK</h4>
     {{-- <p class="card-description"> Add class <code>.table</code> --}}
     </p>
     <div class="table-responsive">
@@ -48,12 +48,13 @@
 				      			<input type="submit" name="submit" class="btn btn-success btn-xs" value="Open">
 			      			</form>
 	      				@else
-	      					{{ 'Aktif/ Sedang berlangsung' }}
+	      					<b>{{ 'Aktif/ Sedang berlangsung' }}</b>
+	      			
 	      					<form action="{{ route('admin.setting.show', $setting->id) }}" method="POST">
 			      				@csrf
 				      			<input type="hidden" name="is_open" value="">
 				      			
-				      			<button type="submit" class="badge badge-primary badge-xs">Close</button>
+				      			<button type="submit" class="badge badge-primary badge-xs">Klik untuk tutup</button>
 			      			</form>
 	      				@endif	
 

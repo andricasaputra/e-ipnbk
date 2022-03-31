@@ -28,7 +28,7 @@
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('survey.index') }}">
+            <a class="nav-link" href="{{ route('admin.survey.history') }}">
               <i class="mdi mdi-file-document menu-icon"></i>
               <span class="menu-title">Survey</span>
             </a>

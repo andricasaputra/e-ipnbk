@@ -26,9 +26,10 @@
 								<div class="mb-3">
 									<label class="mb-2 text-muted" for="username">Username</label>
 									<input id="text" type="username" class="form-control" name="username" value="" required autofocus>
-									<div class="invalid-feedback">
-										username is invalid
-									</div>
+									@if($errors->any())
+										<p style="color: red; font-weight: bold;">{{$errors->first()}}</p>
+									@endif
+
 								</div>
 
 								<div class="mb-3">

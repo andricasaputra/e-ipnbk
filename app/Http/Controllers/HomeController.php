@@ -28,13 +28,12 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {//dd($this->getPegawai());
+    {
         $jadwal = Jadwal::all();
 
         $nilaiRata = $this->repository->nilaiRata();
 
         $konversiNilai = $this->repository->nilaiKonversi();
-
         
         return view('admin.home.index')
                 ->with('ipnbk', $jadwal)
