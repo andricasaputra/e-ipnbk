@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Models\Jadwal;
 
-class isOpen
+class IsOpen
 {
     /**
      * Handle an incoming request.

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Jadwal;
 use App\Models\Result;
 
-class checkIfDone
+class CheckIfDone
 {
     /**
      * Handle an incoming request.

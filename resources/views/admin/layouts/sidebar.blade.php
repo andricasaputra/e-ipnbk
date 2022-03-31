@@ -69,7 +69,7 @@
           <li class="nav-item">
               <a class="nav-link" href="{{ asset('permentan_37_2020.pdf') }}" target="_blank">
                 <i class="mdi mdi-bank menu-icon"></i>
-              Dasar hukum</a>
+              Dasar Hukum</a>
             </li>
 
          {{--  <li class="nav-item">
