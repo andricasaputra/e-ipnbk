@@ -66,23 +66,25 @@
   const pegawai = async () => {
 
      try{
-        const id = '{{ auth()->id() }}';
-        const user_url = '{{ env("APP_USER_URL") }}';
 
-        const response = await fetch(`${user_url}/pegawai/detail/${id}`);
+        const response = await fetch(`{{ route('pegawai') }}`);
 
         if(response.ok){
           const data = await response.json();
 
-          const { nama, image, nip } = data.pegawai;
+          const { nama, nip, image } = data[0];
 
           const container_nama = document.querySelector('#container_nama');
           const foto = document.querySelector('#container_foto');
           const container_nip = document.querySelector('#container_nip');
+          const profil_name = document.querySelector('#profile-name');
+          const profil_pict = document.querySelector('#profile-pict');
 
           container_nama.innerHTML = `<span>${nama}</span>`;
+          profil_name.innerHTML = `<span>${nama}</span>`;
           container_nip.innerHTML = `<span>${nip}</span>`;
           foto.src =  `https://simasn.pertanian.go.id/simasn/fotoprofil/${image}`;
+          profil_pict.src =  `https://simasn.pertanian.go.id/simasn/fotoprofil/${image}`;
 
       }else if(response.status == 401) {
            throw new Error('Username anda tidak ditemukan, silahkan hubungi admin'); 

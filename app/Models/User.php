@@ -44,8 +44,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /*public function pegawai() {
+    public function pegawai() {
 
-        return $this->hasOne(MasterPegawai::class, env('DB_DATABASE_USER') . '.'.'users.id', env('DB_DATABASE_USER') . '.'.'master_pegawai.user_id');
-   }*/
+        return $this->hasOne(MasterPegawai::class);
+   }
 }
