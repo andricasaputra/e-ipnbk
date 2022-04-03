@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="author" content="Muhamad Nauval Azhar">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="description" content="This is a login page template based on Bootstrap 5">
@@ -55,5 +56,55 @@
 			</div>
 		</div>
 	</section>
+
+<script>
+    function getQueryParams()
+    {
+      return new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+      });
+    }
+
+    const autoLogin = async () =>
+          {
+    try{
+
+      const params = getQueryParams();
+
+      let _sk = params._sk; 
+
+      console.log(_sk);
+      const headers = {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      };
+
+      const response = await fetch(`{{ route('sso.login') }}/${_sk}`, {
+          method: "POST",
+          headers: headers
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+          window.location = data.redirect;
+      }else if(response.status == 401) {
+         throw new Error('Username atau password salah'); 
+      }else {
+         throw new Error(response.statusText); 
+          }
+
+      }catch(err){
+          
+        container.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+          
+      }
+    }
+
+    const params = getQueryParams();
+
+    let _sk = params._sk; 
+
+    if (_sk && '{{ !session()->has('logout') }}') autoLogin();
+  </script>
 </body>
 </html>

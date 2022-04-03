@@ -10,8 +10,6 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\LoginController;
 
-Route::post('/login/e-office', [LoginController::class, 'eOfficeLogin'])->name('e-office.login');
-
 Route::get('/pegawai', function(){
 
     return \App\Models\MasterPegawai::where('user_id', auth()->id())->get();
@@ -28,6 +26,7 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/login', [LoginController::class, 'authenticate'])->name('process_login');
 
+    Route::post('/sso/{secret_key?}', [LoginController::class, 'autoLogin'])->name('sso.login');
 
 });
 

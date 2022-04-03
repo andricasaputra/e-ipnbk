@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    protected $user;
+
     public function showLoginForm()
     {
         return view('admin.index');
@@ -46,9 +48,9 @@ class LoginController extends Controller
 
     public function eOfficeLogin(Request $request)
     {
-        $user = User::findOrFail($request->getContent());
+        $this->user = User::whereApiToken($request->getContent())->first();
 
-        if(!$user){
+        if(!$this->user){
             return response()->json([
                 'error' => true,
                 'message' => 'Unauthorized',
@@ -56,26 +58,21 @@ class LoginController extends Controller
             ], 401);
         }
 
-        auth()->login($user);
-
-        $tokenResult = $user->createToken('Personal Access Token');
-
-        $token = $tokenResult->token;
-
-        if ($request->remember_me){
-             $token->expires_at = Carbon::now()->addWeeks(1);
+        if (! Auth::loginUsingId($this->user->id)) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Unauthorized',
+                'status' => 'Unauthenticated',
+            ], 401);
         }
-
-        $token->save();
 
         return response()->json([
             'error' => false,
             'message' => 'Successfully Login',
-            'redirect' => route('admin.home.index'),
-            'access_token' => $tokenResult->accessToken,
+            'redirect' => route('login') .'?_sk='. auth()->user()->api_token,
+            'access_token' => auth()->user()->api_token,
             'token_type' => 'Bearer',
-            'status' => 'Authenticated',
-            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            'status' => 'Authenticated'
         ], 200);
     }
 
@@ -87,17 +84,6 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if (auth()->check()) {
-
-            $token = auth()->user()->token();
-
-            if (! is_null($token)) {
-                $token->update([
-                    'revoked' => 1
-                ]);
-            }
-        }
-
         Auth::logout();
      
         $request->session()->invalidate();
@@ -111,5 +97,32 @@ class LoginController extends Controller
         }
      
         return redirect('/');
+    }
+
+    public function autoLogin(Request $request)
+    {
+        $this->apiToken = $request->secret_key;
+
+        $this->user = User::whereApiToken($this->apiToken)->first();
+
+        if(!$this->user){
+            return response()->json([
+                'error' => true,
+                'message' => 'Unauthorized',
+                'status' => 'Unauthenticated',
+            ], 401);
+        }
+
+        auth()->login($this->user);
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Successfully Login',
+            'redirect' => route('admin.home.index'),
+            'api_token' => $this->apiToken,
+            'token_type' => 'Bearer',
+            'status' => 'Authenticated'
+        ], 200);
+
     }
 }
